@@ -1,7 +1,7 @@
 import { Session } from "./Session";
 
 // =============================================================================
-// Class representation of an array of ssessions
+// List of sessions
 // =============================================================================
 
 export class Sessions {

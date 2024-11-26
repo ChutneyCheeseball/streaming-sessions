@@ -1,5 +1,5 @@
 // =============================================================================
-// Class representation of a single session, with id, start and end
+// Single session, with id, start and end
 // =============================================================================
 
 export class Session {

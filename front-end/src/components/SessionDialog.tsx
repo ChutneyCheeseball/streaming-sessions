@@ -1,4 +1,13 @@
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Slider } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  Slider,
+  Stack,
+} from "@mui/material";
 import { useState } from "react";
 import { Session } from "../classes/Session";
 
@@ -54,18 +63,20 @@ export const SessionDialog = (props: { open: boolean; handleClose: () => void })
         <DialogContentText id="alert-dialog-description">
           Use the slider to indicate the start and end time of the session.
         </DialogContentText>
-        <Slider
-          style={{ marginTop: 32 }}
-          min={0}
-          step={1 / 6} // We will work with 10 minute intervals
-          max={24}
-          value={[session.start, session.end]}
-          valueLabelDisplay="on"
-          valueLabelFormat={formatToTime}
-          onChange={handleChange}
-          marks={getMarks()}
-        />
-        <p>Session duration: {formatToTime(session.getDuration())}</p>
+        <Stack marginX={2}>
+          <Slider
+            style={{ marginTop: 32, marginBottom: 32 }}
+            min={0}
+            step={1 / 6} // We will work with 10 minute intervals
+            max={24}
+            value={[session.start, session.end]}
+            valueLabelDisplay="auto"
+            valueLabelFormat={formatToTime}
+            onChange={handleChange}
+            marks={getMarks()}
+          />
+        </Stack>
+        <DialogContentText>Session duration {formatToTime(session.getDuration())} hours</DialogContentText>
       </DialogContent>
       <DialogActions style={{ justifyContent: "center" }}>
         <Button onClick={handleClose} variant="contained">
