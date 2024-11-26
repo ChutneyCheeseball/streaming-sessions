@@ -10,6 +10,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Session } from "../classes/Session";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { v4 as uuidv4 } from "uuid";
 
 // =============================================================================
 // Utility functions
@@ -19,13 +22,13 @@ const padTime = (value: number) => {
   return value.toString().padStart(2, "0");
 };
 
-const formatToTime = (value: number) => {
+export const formatToTime = (value: number) => {
   const hoursInteger = Math.floor(value);
   const minutes = Math.round((value - hoursInteger) * 60);
   return `${padTime(hoursInteger)}:${padTime(minutes)}`;
 };
 
-const getMarks = () => {
+export const getMarks = () => {
   const marks: { value: number; label: string }[] = [];
   // Show marks every 2 hours
   for (let i = 0; i <= 24; i += 2) {
@@ -38,8 +41,14 @@ const getMarks = () => {
 // Main SessionDialog component
 // =============================================================================
 
-export const SessionDialog = (props: { open: boolean; handleClose: () => void }) => {
-  const { open, handleClose } = props;
+export const SessionDialog = (props: {
+  open: boolean;
+  session: Session | null;
+  handleClose: () => void;
+  handleSave: (session: Session) => void;
+}) => {
+  const { open, handleClose, handleSave } = props;
+  const initialSession = props.session || new Session("", 12, 12);
 
   const handleChange = (_: any, newValues: number | number[]) => {
     // We are always using a range instead of a single value
@@ -48,7 +57,7 @@ export const SessionDialog = (props: { open: boolean; handleClose: () => void })
     }
   };
 
-  const [session, setSession] = useState(new Session(Math.random(), 0, 1));
+  const [session, setSession] = useState(initialSession);
 
   return (
     <Dialog
@@ -58,7 +67,7 @@ export const SessionDialog = (props: { open: boolean; handleClose: () => void })
       fullWidth={true}
       maxWidth="md"
     >
-      <DialogTitle id="alert-dialog-title">Add a new session</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{session.id ? "Edit a session" : "Add a session"}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           Use the slider to indicate the start and end time of the session.
@@ -79,11 +88,29 @@ export const SessionDialog = (props: { open: boolean; handleClose: () => void })
         <DialogContentText>Session duration {formatToTime(session.getDuration())} hours</DialogContentText>
       </DialogContent>
       <DialogActions style={{ justifyContent: "center" }}>
-        <Button onClick={handleClose} variant="contained">
+        <Button
+          onClick={handleClose}
+          variant="contained"
+          color="primary"
+          startIcon={<CancelIcon />}
+          style={{ width: 120 }}
+        >
           Cancel
         </Button>
-        <Button onClick={handleClose} variant="contained" autoFocus color="success">
-          Save
+        <Button
+          onClick={() => {
+            if (!session.id) {
+              session.id = uuidv4();
+            }
+            handleSave(session);
+          }}
+          variant="contained"
+          autoFocus
+          color="success"
+          startIcon={<CheckCircleIcon />}
+          style={{ width: 120 }}
+        >
+          Apply
         </Button>
       </DialogActions>
     </Dialog>

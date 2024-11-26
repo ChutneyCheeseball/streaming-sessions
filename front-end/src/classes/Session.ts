@@ -3,11 +3,11 @@
 // =============================================================================
 
 export class Session {
-  private _id: number;
+  private _id: string;
   private _start: number;
   private _end: number;
 
-  constructor(id: number, start: number, end: number) {
+  constructor(id: string, start: number, end: number) {
     if (end < start) {
       throw new Error("Session end must be after start");
     }
@@ -16,7 +16,7 @@ export class Session {
     this._end = end;
   }
 
-  set id(id: number) {
+  set id(id: string) {
     this._id = id;
   }
 
@@ -28,7 +28,7 @@ export class Session {
     this._end = end;
   }
 
-  get id(): number {
+  get id(): string {
     return this._id;
   }
 

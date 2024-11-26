@@ -11,15 +11,17 @@ export class Sessions {
     this._sessions = sessions;
   }
 
+  // Add or update
   add(session: Session) {
-    if (this._sessions.findIndex((ses) => ses.id === session.id) !== -1) {
-      return false; // Can't add multiples with same ID
+    const idx = this._sessions.findIndex((ses) => ses.id === session.id);
+    if (idx !== -1) {
+      this._sessions[idx] = session;
+    } else {
+      this._sessions.push(session);
     }
-    this._sessions.push(session);
-    return true; // Added OK
   }
 
-  addNew(id: number, start: number, end: number) {
+  addNew(id: string, start: number, end: number) {
     return this.add(new Session(id, start, end));
   }
 
@@ -30,7 +32,7 @@ export class Sessions {
     }
   }
 
-  removeById(id: number) {
+  removeById(id: string) {
     const index = this._sessions.findIndex((session) => session.id === id);
     if (index !== -1) {
       this.removeByIdx(index);
