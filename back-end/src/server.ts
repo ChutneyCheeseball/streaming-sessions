@@ -3,6 +3,7 @@ import { getAllSessions } from "./handlers/getAllSessions";
 import { getSessionById, getSessionByIdSchema } from "./handlers/getSessionById";
 import { createOrUpdateSession, createOrUpdateSessionSchema } from "./handlers/createOrUpdateSession";
 import cors from "@fastify/cors";
+import { deleteSessionByIdSchema, deleteSessionById } from "./handlers/deleteSessionById";
 
 const server = fastify();
 server.register(cors, {
@@ -29,6 +30,7 @@ export const sessions = [
 server.get("/sessions", getAllSessions);
 server.get("/sessions/:id", { schema: getSessionByIdSchema }, getSessionById);
 server.post("/sessions", { schema: createOrUpdateSessionSchema }, createOrUpdateSession);
+server.delete("/sessions/:id", { schema: deleteSessionByIdSchema }, deleteSessionById);
 
 // Go server go
 const port = 3001;

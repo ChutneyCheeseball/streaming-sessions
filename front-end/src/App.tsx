@@ -42,6 +42,7 @@ function App() {
   const handleDeleteSession = (session: Session) => {
     const newSessions = new Sessions(sessions.list.filter((s) => s.id !== session.id));
     setSessions(newSessions);
+    deleteSession(session);
   };
 
   const getSessions = async () => {
@@ -64,6 +65,15 @@ function App() {
   const postSession = async (session: Session) => {
     try {
       const response = await axios.post("http://localhost:3001/sessions", session);
+      console.log(response.status);
+    } catch (e) {
+      console.log("Oh no");
+    }
+  };
+
+  const deleteSession = async (session: Session) => {
+    try {
+      const response = await axios.delete(`http://localhost:3001/sessions/${session.id}`);
       console.log(response.status);
     } catch (e) {
       console.log("Oh no");
