@@ -21,11 +21,20 @@ export const deleteSessionByIdSchema = {
 
 export async function deleteSessionById(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
   const { id } = request.params;
-  const idx = sessions.findIndex((s) => s.id === id);
-  if (idx !== -1) {
-    sessions.splice(idx, 1);
-    reply.send({ message: "Session deleted." });
-  } else {
-    reply.code(404).send({ message: "Session not found" });
+  try {
+    const session = await request.server.database.sessions.findOne({
+      where: {
+        id
+      }
+    });
+    if (session) {
+      await session.destroy();
+      reply.send({ message: "Session deleted" });
+    } else {
+      reply.code(404).send({ message: "Session not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    reply.code(500).send({ message: "DB error while deleting session" });
   }
 }

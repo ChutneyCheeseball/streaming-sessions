@@ -24,15 +24,24 @@ export async function createOrUpdateSession(
   reply: FastifyReply
 ) {
   const { id, start, end } = request.body;
+  // Range check
   if (start < 0 || start > 24 || end < 0 || end > 24 || end < start) {
     reply.code(400).send({ message: "Session start/end out of bounds" });
   }
-  const idx = sessions.findIndex((s) => s.id === id);
-  if (idx === -1) {
-    sessions.push({ id, start, end });
-    reply.send({ message: "Session created" });
-  } else {
-    sessions[idx] = { id, start, end };
-    reply.send({ message: "Session updated" });
+  try {
+    const existingSession = await request.server.database.sessions.findOne({
+      where: { id }
+    });
+    const session = await request.server.database.sessions.upsert({
+      id, start, end
+    });
+    if (existingSession) {
+      reply.send("Session updated");
+    } else {
+      reply.send("Session created");
+    }
+  } catch (error) {
+    console.error(error);
+    reply.code(500).send({ message: "DB error while updating/creating session" });
   }
 }
