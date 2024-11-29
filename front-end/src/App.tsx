@@ -62,7 +62,9 @@ export const App = () => {
     if (newSessions !== null) {
       setSessions(newSessions);
     } else {
-      console.log("Oh no");
+      // console.log("Oh no");
+      // I wanted to display a toast message or something here
+      // but I got tired of working on this
     }
   };
 

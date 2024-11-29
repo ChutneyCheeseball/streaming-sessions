@@ -13,7 +13,9 @@ export const getSessions = async () => {
       return newSessions;
     }
   } catch (e) {
-    console.log("Oh no");
+    console.error("Error getting sessions:", e);
+    // These could have been beautiful toast messages
+    alert("Could not get sessions. Is the API service running?");
   }
   return null;
 };
@@ -24,9 +26,9 @@ export const postSession = async (session: Session) => {
       "http://localhost:3001/sessions",
       session
     );
-    console.log(response.status);
   } catch (e) {
-    console.log("Oh no");
+    console.error("Error creating/updating session:", e);
+    alert("Could not create/update session. Is the API service running?");
   }
 };
 
@@ -35,8 +37,8 @@ export const deleteSession = async (session: Session) => {
     const response = await axios.delete(
       `http://localhost:3001/sessions/${session.id}`
     );
-    console.log(response.status);
   } catch (e) {
-    console.log("Oh no");
+    console.error("Error deleting session:", e);
+    alert("Could not delete sessions. Is the API service running?");
   }
 };
