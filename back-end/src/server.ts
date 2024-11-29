@@ -2,8 +2,14 @@ import fastify from "fastify";
 import cors from "@fastify/cors";
 
 import { getAllSessions } from "./handlers/getAllSessions";
-import { getSessionById, getSessionByIdSchema } from "./handlers/getSessionById";
-import { createOrUpdateSession, createOrUpdateSessionSchema } from "./handlers/createOrUpdateSession";
+import {
+  getSessionById,
+  getSessionByIdSchema,
+} from "./handlers/getSessionById";
+import {
+  createOrUpdateSession,
+  createOrUpdateSessionSchema,
+} from "./handlers/createOrUpdateSession";
 import { deleteSessionById } from "./handlers/deleteSessionById";
 import { database } from "./database";
 
@@ -27,24 +33,32 @@ async function main() {
     database: "my_database",
     user: "my_user",
     password: "my_password",
-    host: "localhost"
-  })
-  
+    host: "localhost",
+  });
+
   // Server routes
   server.get("/sessions", getAllSessions);
   server.get("/sessions/:id", { schema: getSessionByIdSchema }, getSessionById);
-  server.post("/sessions", { schema: createOrUpdateSessionSchema }, createOrUpdateSession);
-  server.delete("/sessions/:id", { schema: getSessionByIdSchema }, deleteSessionById); // Reuse schema
-  
+  server.post(
+    "/sessions",
+    { schema: createOrUpdateSessionSchema },
+    createOrUpdateSession
+  );
+  server.delete(
+    "/sessions/:id",
+    { schema: getSessionByIdSchema },
+    deleteSessionById
+  ); // Reuse schema
+
   // Go server go
   const port = 3001;
   server.listen({ port }, (err, address) => {
     if (err) {
-      console.error(err)
-      process.exit(1)
+      console.error(err);
+      process.exit(1);
     }
     console.log(`Server listening on ${address}`);
-  });  
+  });
 }
 
-main()
+main();

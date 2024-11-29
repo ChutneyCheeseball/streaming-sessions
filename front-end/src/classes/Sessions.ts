@@ -63,12 +63,12 @@ export class Sessions {
 
     // We only want the start and end times, and we want them sorted
     // with the earliest starting ones appearing first
-    const intervals = [
-      ...this._sessions.map((session) => ({
+    const intervals = this._sessions
+      .map((session) => ({
         start: session.start,
         end: session.end,
-      })),
-    ].sort((a, b) => a.start - b.start);
+      }))
+      .sort((a, b) => a.start - b.start);
     // First interval is first entry in our result set
     const merged = [intervals[0]];
     // Check the others

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import 'fastify'
-import { Model, ModelCtor } from 'sequelize'
+import "fastify";
+import { Model, ModelCtor } from "sequelize";
 
-declare module 'fastify' {
+declare module "fastify" {
   interface FastifyInstance {
     // Needed for decorate()
     database: {
-      sessions: ModelCtor<Model<any, any>>
-    }
+      sessions: ModelCtor<Model<any, any>>;
+    };
   }
 }

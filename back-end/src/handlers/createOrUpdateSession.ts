@@ -7,7 +7,11 @@ import { FastifyRequest, FastifyReply } from "fastify";
 export const createOrUpdateSessionSchema = {
   body: {
     type: "object",
-    properties: { id: { type: "string" }, start: { type: "number" }, end: { type: "number" } },
+    properties: {
+      id: { type: "string" },
+      start: { type: "number" },
+      end: { type: "number" },
+    },
     required: ["id", "start", "end"],
   },
 };
@@ -29,18 +33,22 @@ export async function createOrUpdateSession(
   }
   try {
     const existingSession = await request.server.database.sessions.findOne({
-      where: { id }
+      where: { id },
     });
     const session = await request.server.database.sessions.upsert({
-      id, start, end
+      id,
+      start,
+      end,
     });
     if (existingSession) {
-      reply.send("Session updated");
+      reply.send({ message: "Session updated" });
     } else {
-      reply.send("Session created");
+      reply.send({ message: "Session created" });
     }
   } catch (error) {
     console.error(error);
-    reply.code(500).send({ message: "DB error while updating/creating session" });
+    reply
+      .code(500)
+      .send({ message: "DB error while updating/creating session" });
   }
 }

@@ -4,13 +4,16 @@ import { FastifyRequest, FastifyReply } from "fastify";
 // Handler Function
 // =================================================================================================
 
-export async function deleteSessionById(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+export async function deleteSessionById(
+  request: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply
+) {
   const { id } = request.params;
   try {
     const session = await request.server.database.sessions.findOne({
       where: {
-        id
-      }
+        id,
+      },
     });
     if (session) {
       await session.destroy();

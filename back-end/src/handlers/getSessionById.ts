@@ -18,18 +18,21 @@ export const getSessionByIdSchema = {
 // Handler Function
 // =================================================================================================
 
-export async function getSessionById(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+export async function getSessionById(
+  request: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply
+) {
   const { id } = request.params;
   try {
     const session = await request.server.database.sessions.findOne({
       where: {
-        id
-      }
+        id,
+      },
     });
     if (session) {
       reply.send(session);
     } else {
-      reply.code(404).send({ message: "Session not found" })
+      reply.code(404).send({ message: "Session not found" });
     }
   } catch (error) {
     console.error(error);
