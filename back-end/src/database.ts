@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
-import fastifyPlugin from 'fastify-plugin'
 import { DataTypes, Sequelize } from 'sequelize'
+import fastifyPlugin from 'fastify-plugin'
 
 interface dbOptions {
   database: string
@@ -8,6 +8,10 @@ interface dbOptions {
   password: string
   host: string
 }
+
+// =================================================================================================
+// Database Plugin for Fastify
+// =================================================================================================
 
 function db(fastify: FastifyInstance, opts: dbOptions, done: (error?: Error) => void) {
   // Init db instance
@@ -34,11 +38,8 @@ function db(fastify: FastifyInstance, opts: dbOptions, done: (error?: Error) => 
     }
   })
 
-  // ---------------------------------------------------------------------------
   // Test our database connection - if good: add hooks, decorators, do sync
   // Otherwise, let Fastify know to give up
-  // ---------------------------------------------------------------------------
-
   sequelize
     .authenticate()
     // All good

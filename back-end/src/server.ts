@@ -1,24 +1,15 @@
 import fastify from "fastify";
+import cors from "@fastify/cors";
+
 import { getAllSessions } from "./handlers/getAllSessions";
 import { getSessionById, getSessionByIdSchema } from "./handlers/getSessionById";
 import { createOrUpdateSession, createOrUpdateSessionSchema } from "./handlers/createOrUpdateSession";
-import { deleteSessionByIdSchema, deleteSessionById } from "./handlers/deleteSessionById";
+import { deleteSessionById } from "./handlers/deleteSessionById";
 import { database } from "./database";
-import cors from "@fastify/cors";
 
-// Our fake database for testing
-export const sessions = [
-  {
-    id: "1",
-    start: 0,
-    end: 12,
-  },
-  {
-    id: "2",
-    start: 5,
-    end: 13,
-  },
-];
+// =================================================================================================
+// Main Application
+// =================================================================================================
 
 async function main() {
   // Get Fastify instance
@@ -29,7 +20,8 @@ async function main() {
     methods: ["GET", "POST", "DELETE", "OPTIONS"],
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
   });
-  
+
+  // Register database plugin
   // NOTE: This must match docker-compose.yml
   await server.register(database, {
     database: "my_database",
@@ -42,13 +34,16 @@ async function main() {
   server.get("/sessions", getAllSessions);
   server.get("/sessions/:id", { schema: getSessionByIdSchema }, getSessionById);
   server.post("/sessions", { schema: createOrUpdateSessionSchema }, createOrUpdateSession);
-  server.delete("/sessions/:id", { schema: deleteSessionByIdSchema }, deleteSessionById);
+  server.delete("/sessions/:id", { schema: getSessionByIdSchema }, deleteSessionById); // Reuse schema
   
   // Go server go
   const port = 3001;
-  server.listen({ port }, (err) => {
-    if (err) throw err;
-    console.log(`Server listening on port ${port}`);
+  server.listen({ port }, (err, address) => {
+    if (err) {
+      console.error(err)
+      process.exit(1)
+    }
+    console.log(`Server listening on ${address}`);
   });  
 }
 

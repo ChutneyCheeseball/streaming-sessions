@@ -1,19 +1,4 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { sessions } from "../server";
-
-// =================================================================================================
-// Handler Schema
-// =================================================================================================
-
-export const deleteSessionByIdSchema = {
-  params: {
-    type: "object",
-    required: ["id"],
-    properties: {
-      id: { type: "string" },
-    },
-  },
-};
 
 // =================================================================================================
 // Handler Function
