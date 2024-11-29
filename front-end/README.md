@@ -1,46 +1,57 @@
-# Getting Started with Create React App
+# streaming-sessions front-end
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+The [MUI](https://mui.com) library was used to leverage components such as the slider, icon buttons and dialogs.
 
-In the project directory, you can run:
+## Prerequisites
+
+The React app requires the back-end services (NodeJS, MySQL) to be running.
+
+## Quickstart
+
+Install the required node modules with:
+
+### `npm install`
+
+Thereafter you can run the project with:
 
 ### `npm start`
 
-Runs the app in the development mode.\
+This runs the app in the development mode.
+
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Using the app
 
-### `npm test`
+The following buttons appear on screen.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Load All** - load all sessions from API
+- **Save All** - save all sessions to API
+- **Add New Session** - opens a dialog to add a new session
 
-### `npm run build`
+When sessions have been added, they are represented by a read-only slider with indicated start and end times. Alongside, there are also two buttons per session.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Edit** - open a dialog to edit this session
+- **Delete** - delete this session
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The add/edit session dialog features a slider marked at 2-hour intervals. Drag the ends of the slider until the session start and end times are as required. Note that the slider snaps to 10-minute intervals, which was done deliberately for the sake of simplicity. The dialog shows the duration of the session being worked on, and has two buttons.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Cancel** - discard any changes made
+- **Apply** - save changes
 
-### `npm run eject`
+## Calculating total duration of sessions
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This is implemented in `src/classes/Sessions.ts` in the `getTotalDuration()` method.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The problem is a variant of a very similiar problem I've had to solve previously, so I had a fairly good idea on how to approach it. I provided comments on the method, but in a nutshell:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. Sort all sessions by start time, earliest first.
+2. Use the first session as the first entry in the merged result set.
+3. Loop over remaining sessions
+4. Compare each session to the last entry in the merged result set.
+5. If the session starts before the last merged one ends, overlap occurrs. Extend the end time of the last merged to whichever end time is greatest between current and last.
+6. If no overlap, add the session to the result set.
+7. Repeat from step 3.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+The total duration is equal to the end time - start time of each entry in the result set.

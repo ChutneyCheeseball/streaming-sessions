@@ -1,2 +1,3 @@
 # streaming-sessions
-Full-stack implementation of streaming sessions durations
+
+## Please note that the `front-end` and `back-end` folders each have their own documentation.
