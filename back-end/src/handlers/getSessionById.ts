@@ -1,5 +1,4 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { sessions } from "../server";
 
 // =================================================================================================
 // Handler Schema
@@ -21,10 +20,19 @@ export const getSessionByIdSchema = {
 
 export async function getSessionById(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
   const { id } = request.params;
-  const idx = sessions.findIndex((s) => s.id === id);
-  if (idx !== -1) {
-    reply.send(sessions[idx]);
-  } else {
-    reply.code(404).send({ message: "Session not found" });
+  try {
+    const session = await request.server.database.sessions.findOne({
+      where: {
+        id
+      }
+    });
+    if (session) {
+      reply.send(session);
+    } else {
+      reply.code(404).send({ message: "Session not found" })
+    }
+  } catch (error) {
+    console.error(error);
+    reply.code(500).send({ message: "DB error while getting session" });
   }
 }
