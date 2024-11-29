@@ -1,8 +1,8 @@
 import { Session } from "./Session";
 
-// =============================================================================
+// =================================================================================================
 // List of sessions
-// =============================================================================
+// =================================================================================================
 
 export class Sessions {
   private _sessions: Session[];
@@ -53,5 +53,42 @@ export class Sessions {
 
   isEmpty() {
     return this._sessions.length === 0;
+  }
+
+  getTotalDuration() {
+    // Nothing to do
+    if (this.isEmpty()) {
+      return 0;
+    }
+
+    // We only want the start and end times, and we want them sorted
+    // with the earliest starting ones appearing first
+    const intervals = [
+      ...this._sessions.map((session) => ({
+        start: session.start,
+        end: session.end,
+      })),
+    ].sort((a, b) => a.start - b.start);
+    // First interval is first entry in our result set
+    const merged = [intervals[0]];
+    // Check the others
+    for (let i = 1; i < intervals.length; i++) {
+      const lastMerged = merged[merged.length - 1]; // The last one merged
+      const current = intervals[i]; // The one we will compare it to
+      // Check if overlap occurrs
+      if (current.start <= lastMerged.end) {
+        // Merge to latest ending
+        lastMerged.end = Math.max(current.end, lastMerged.end);
+      } else {
+        // Unmerged result added to set
+        merged.push(current);
+      }
+    }
+
+    let duration = 0;
+    for (let m of merged) {
+      duration += m.end - m.start;
+    }
+    return duration;
   }
 }

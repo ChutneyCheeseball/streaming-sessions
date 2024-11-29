@@ -14,9 +14,9 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { v4 as uuidv4 } from "uuid";
 
-// =============================================================================
+// =================================================================================================
 // Utility functions
-// =============================================================================
+// =================================================================================================
 
 const padTime = (value: number) => {
   return value.toString().padStart(2, "0");
@@ -37,9 +37,9 @@ export const getMarks = () => {
   return marks;
 };
 
-// =============================================================================
-// Main SessionDialog component
-// =============================================================================
+// =================================================================================================
+// SessionDialog component
+// =================================================================================================
 
 export const SessionDialog = (props: {
   open: boolean;
@@ -67,7 +67,9 @@ export const SessionDialog = (props: {
       fullWidth={true}
       maxWidth="md"
     >
-      <DialogTitle id="alert-dialog-title">{session.id ? "Edit a session" : "Add a session"}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">
+        {session.id ? "Edit a session" : "Add a session"}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           Use the slider to indicate the start and end time of the session.
@@ -85,7 +87,9 @@ export const SessionDialog = (props: {
             marks={getMarks()}
           />
         </Stack>
-        <DialogContentText>Session duration {formatToTime(session.getDuration())} hours</DialogContentText>
+        <DialogContentText>
+          Session duration {formatToTime(session.getDuration())} hours
+        </DialogContentText>
       </DialogContent>
       <DialogActions style={{ justifyContent: "center" }}>
         <Button
